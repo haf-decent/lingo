@@ -35,8 +35,10 @@ export function Game({ word, chooseNewWord }) {
 
 	const checkStatus = useCallback((letter, index) => {
 		if (letter === "_") return null;
-		if (letter === word[ index ]) return "correct";
-		if (word.includes(letter)) return "misplaced";
+		if (word.includes(letter)) {
+			if (letter === word[ index ]) return "correct";
+			return "misplaced";
+		}
 		return "unused";
 	}, [ word ]);
 
@@ -47,7 +49,6 @@ export function Game({ word, chooseNewWord }) {
 	const size = isMobile && word && window.innerWidth < 130 + word.length * 60
 		? (window.innerWidth - 130) / word.length
 		: 60;
-	console.log(size);
 
 	return (
 		<Container>
