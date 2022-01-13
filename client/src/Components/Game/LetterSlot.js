@@ -8,7 +8,7 @@ const Container = styled(CenteredFlex)`
 	margin: 5px;
 	border-radius: ${({ size }) => size / 2}px;
 
-	box-shadow: 0px 3px 11px rgba(0,0,0,0.3);
+	box-shadow: ${({ invert = false }) => invert ? "inset": ""} 0px 3px 11px rgba(0,0,0,0.3);
 	
 	text-transform: uppercase;
 	color: gray;
@@ -29,10 +29,14 @@ const Container = styled(CenteredFlex)`
 	}}
 `;
 
-export function LetterSlot({ letter = "_", status, size = 60 }) {
+export function LetterSlot({ letter = "_", status, size = 60, invert = false }) {
 
 	return (
-		<Container size={size} status={status}>
+		<Container
+			size={size}
+			status={status}
+			invert={invert}
+		>
 			{letter}
 		</Container>
 	)
