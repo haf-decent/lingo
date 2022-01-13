@@ -40,14 +40,13 @@ export function Board({ enabled, gameState, onInput, onBackspace, onEnter, size 
 
 		if (!inputEl) {
 			const onKeyDown = ({ key }) => {
-				console.log(key);
 				switch(key) {
 					case "Backspace":
 						return onBackspace();
 					case "Enter":
 						return onEnter();
 					default:
-						allowed.includes(key.toLowerCase()) && onInput(key);
+						allowed.includes(key.toLowerCase()) && onInput(key.toLowerCase());
 				}
 			}
 			window.addEventListener("keydown", onKeyDown);
@@ -62,7 +61,7 @@ export function Board({ enabled, gameState, onInput, onBackspace, onEnter, size 
 				case "insertLineBreak":
 					return onEnter();
 				case "insertText":
-					return allowed.includes(data.toLowerCase()) && onInput(data);
+					return allowed.includes(data.toLowerCase()) && onInput(data.toLowerCase());
 				default:
 					return;
 			}
