@@ -9,7 +9,6 @@ const Container = styled(Flex).attrs(() => ({
 	align: "center"
 }))`
 	width: ${({ width }) => width}px;
-	margin: 15px;
 	padding: 15px;
 	border-radius: 10px;
 	box-shadow: inset 0px 3px 11px rgba(0,0,0,0.3);

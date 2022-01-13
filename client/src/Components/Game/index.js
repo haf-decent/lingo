@@ -1,16 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { isMobile } from "react-device-detect";
 
-import { CenteredFlex } from "../Styles/Flex";
+import { CenteredFlex, Flex } from "../Styles/Flex";
 import { Board } from "./Board";
 import { Controls } from "./Controls";
+import { LetterSlot } from "./LetterSlot";
 
 const Container = styled(CenteredFlex).attrs(() => ({
 	column: true
 }))`
 	padding: 30px;
+	& > div {
+		margin-bottom: 15px;
+	}
 `;
+
+const Title = styled(Flex).attrs(() => ({
+	align: "center"
+}))``;
 
 const createBlankState = (rows, cols) => (
 	Array.from({ length: rows }, () => (
@@ -46,12 +54,23 @@ export function Game({ word, chooseNewWord }) {
 	const hasLost = !hasWon && state.move[0] >= state.rows.length;
 	const enabled = !!word && !hasWon && !hasLost;
 
-	const size = isMobile && word && window.innerWidth < 130 + word.length * 60
-		? (window.innerWidth - 130) / word.length
-		: 60;
+	const size = useMemo(() => {
+		if (isMobile && word && window.innerWidth < 130 + word.length * 60) return (window.innerWidth - 130) / word.length;
+		return 60;
+	}, [ word ]);
 
 	return (
 		<Container>
+			<Title>
+				{"LINGO".split("").map((c, i) => (
+					<LetterSlot
+						key={i}
+						letter={c}
+						size={size}
+						invert={true}
+					/>
+				))}
+			</Title>
 			<Board
 				enabled={enabled}
 				size={size}
