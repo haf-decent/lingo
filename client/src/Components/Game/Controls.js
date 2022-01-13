@@ -8,7 +8,7 @@ const Container = styled(Flex).attrs(() => ({
 	justify: "space-between",
 	align: "center"
 }))`
-	width: 370px;
+	width: ${({ width }) => width}px;
 	margin: 15px;
 	padding: 15px;
 	border-radius: 10px;
@@ -33,11 +33,11 @@ const ResetButton = styled(CenteredFlex)`
 	cursor: pointer;
 `;
 
-export function Controls({ enabled, hasWon, hasLost, onReset }) {
+export function Controls({ width = 370, enabled, hasWon, hasLost, onReset }) {
 	const [ elapsed, restart ] = useTimer(enabled);
 
 	return (
-		<Container>
+		<Container width={width}>
 			<Status>
 				{hasLost
 					? <>OOP - It was <strong>"{hasLost}"</strong></>

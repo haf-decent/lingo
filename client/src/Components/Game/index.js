@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { isMobile } from "react-device-detect";
 
 import { CenteredFlex } from "../Styles/Flex";
 import { Board } from "./Board";
@@ -43,10 +44,16 @@ export function Game({ word, chooseNewWord }) {
 	const hasLost = !hasWon && state.move[0] >= state.rows.length;
 	const enabled = !!word && !hasWon && !hasLost;
 
+	const size = isMobile && word && window.innerWidth < 130 + word.length * 60
+		? (window.innerWidth - 130) / word.length
+		: 60;
+	console.log(size);
+
 	return (
 		<Container>
 			<Board
 				enabled={enabled}
+				size={size}
 				gameState={state.rows.map((row, r) => row.map((char, c) => ({
 					letter: char,
 					status: r < state.move[0]
@@ -86,6 +93,7 @@ export function Game({ word, chooseNewWord }) {
 				}}
 			/>
 			<Controls
+				width={size * word.length + 70}
 				enabled={enabled}
 				hasWon={hasWon}
 				hasLost={hasLost ? word: false}

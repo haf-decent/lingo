@@ -29,10 +29,10 @@ const Container = styled(CenteredFlex)`
 	}}
 `;
 
-export function LetterSlot({ letter = "_", status }) {
+export function LetterSlot({ letter = "_", status, size = 60 }) {
 
 	return (
-		<Container size={60} status={status}>
+		<Container size={size} status={status}>
 			{letter}
 		</Container>
 	)
