@@ -36,7 +36,7 @@ export function Game({ word, chooseNewWord }) {
 
 	const resetState = useCallback(() => setState({
 		move: [ 0, 0 ],
-		rows: createBlankState(word.length, word.length)
+		rows: createBlankState(word.length + 1, word.length)
 	}), [ word ]);
 
 	useEffect(resetState, [ resetState ]);
