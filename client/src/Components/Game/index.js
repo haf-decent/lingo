@@ -59,6 +59,35 @@ export function Game({ word, chooseNewWord }) {
 		return 60;
 	}, [ word ]);
 
+	const onInput = useCallback(letter => setState(({ move: [ row, col ], rows }) => {
+		const [ letterCol, moveCol ] = col === rows[ row ].length
+			? [ col - 1, col ]
+			: [ col, col + 1 ];
+		rows[ row ][ letterCol ] = letter;
+		return {
+			move: [ row, moveCol ],
+			rows
+		}
+	}), []);
+
+	const onEnter = useCallback(() => setState(s => {
+		const { move: [ row, col ], rows } = s;
+		if (col < rows[ row ].length) return s;
+		return {
+			...s,
+			move: [ row + 1, 0 ]
+		}
+	}), []);
+
+	const onBackspace = useCallback(() => setState(({ move: [ row, col ], rows }) => {
+		const nCol = Math.max(col - 1, 0);
+		rows[ row ][ nCol ] = "_";
+		return {
+			move: [ row, nCol ],
+			rows
+		}
+	}), []);
+
 	return (
 		<Container>
 			<Title>
@@ -82,35 +111,9 @@ export function Game({ word, chooseNewWord }) {
 							? "selected"
 							: null
 				})))}
-				onInput={letter => {
-					setState(({ move: [ row, col ], rows }) => {
-						rows[ row ][ col === rows[ row ].length ? col - 1: col ] = letter;
-						return {
-							move: [ row, col === rows[ row ].length ? col: col + 1 ],
-							rows
-						}
-					});
-				}}
-				onEnter={() => {
-					setState(s => {
-						const [ row, col ] = s.move;
-						if (col < s.rows[ row ].length) return s;
-						return {
-							...s,
-							move: [ row + 1, 0 ]
-						}
-					});
-				}}
-				onBackspace={() => {
-					setState(({ move: [ row, col ], rows }) => {
-						const nCol = Math.max(col - 1, 0);
-						rows[ row ][ nCol ] = "_";
-						return {
-							move: [ row, nCol ],
-							rows
-						}
-					});
-				}}
+				onInput={onInput}
+				onEnter={onEnter}
+				onBackspace={onBackspace}
 			/>
 			<Controls
 				width={size * word.length + 70}
