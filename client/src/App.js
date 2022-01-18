@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import { words } from "./wordList";
 
 import { Game } from "./Components/Game";
 
-function App() {
-	const [ word, setWord ] = useState(words[ Math.floor(Math.random() * words.length) ]);
+const chooseRandomWord = () => words[ Math.floor(Math.random() * words.length) ];
 
-	const shuffleWord = () => setWord(words[ Math.floor(Math.random() * words.length) ]);
+function App() {
+	const [ word, shuffleWord ] = useReducer(chooseRandomWord, chooseRandomWord());
 	
   return (
     <Game
