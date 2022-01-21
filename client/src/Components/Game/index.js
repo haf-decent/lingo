@@ -2,29 +2,33 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { isMobile } from "react-device-detect";
 
-import { CenteredFlex, Flex } from "../Styles/Flex";
+import { CenteredFlex } from "../Styles/Flex";
 import { Board } from "./Board";
 import { Controls } from "./Controls";
-import { LetterSlot } from "./LetterSlot";
+// import { LetterSlot } from "./LetterSlot";
+import { Keyboard } from "./Keyboard";
 
 const Container = styled(CenteredFlex).attrs(() => ({
 	column: true
 }))`
 	padding: 30px;
-	& > div {
+	padding-bottom: 160px;
+	& > div:not(:last-of-type) {
 		margin-bottom: 15px;
 	}
 `;
 
-const Title = styled(Flex).attrs(() => ({
-	align: "center"
-}))``;
+// const Title = styled(Flex).attrs(() => ({
+// 	align: "center"
+// }))``;
 
 const createBlankState = (rows, cols) => (
 	Array.from({ length: rows }, () => (
 		Array.from({ length: cols }, () => "_")
 	))
 );
+
+const defaultSize = 60;
 
 export function Game({ word, chooseNewWord }) {
 	word = word.toLowerCase();
@@ -55,8 +59,8 @@ export function Game({ word, chooseNewWord }) {
 	const enabled = !!word && !hasWon && !hasLost;
 
 	const size = useMemo(() => {
-		if (isMobile && word && window.innerWidth < 130 + word.length * 60) return (window.innerWidth - 130) / word.length;
-		return 60;
+		if (isMobile && word && window.innerWidth < 130 + word.length * defaultSize) return defaultSize / 60 * (window.innerWidth - 130) / word.length;
+		return defaultSize;
 	}, [ word ]);
 
 	const onInput = useCallback(letter => setState(({ move: [ row, col ], rows }) => {
@@ -88,9 +92,27 @@ export function Game({ word, chooseNewWord }) {
 		}
 	}), []);
 
+	const gameState = useMemo(() => state.rows.map((row, r) => (
+		row.map((char, c) => ({
+			letter: char,
+			status: r < state.move[0]
+				? checkStatus(char, c)
+				: enabled && r === state.move[0] && (c === state.move[1] || (state.move[1] === row.length && c === state.move[1] - 1))
+					? "selected"
+					: null
+		})
+	))), [ state, checkStatus, enabled ]);
+
+	const letterState = useMemo(() => (
+		state.rows.reduce((obj, row, r) => {
+			if (r < state.move[0]) row.forEach((char, c) => obj[ char ] = checkStatus(char, c));
+			return obj
+		}, {})
+	), [ state, checkStatus ])
+
 	return (
 		<Container>
-			<Title>
+			{/* <Title>
 				{"LINGO".split("").map((c, i) => (
 					<LetterSlot
 						key={i}
@@ -99,29 +121,31 @@ export function Game({ word, chooseNewWord }) {
 						invert={true}
 					/>
 				))}
-			</Title>
-			<Board
-				enabled={enabled}
-				size={size}
-				gameState={state.rows.map((row, r) => row.map((char, c) => ({
-					letter: char,
-					status: r < state.move[0]
-						? checkStatus(char, c)
-						: enabled && r === state.move[0] && (c === state.move[1] || (state.move[1] === row.length && c === state.move[1] - 1))
-							? "selected"
-							: null
-				})))}
-				onInput={onInput}
-				onEnter={onEnter}
-				onBackspace={onBackspace}
-			/>
+			</Title> */}
 			<Controls
-				width={size * word.length + 70}
+				width={size * word.length + 50}
 				enabled={enabled}
 				hasWon={hasWon}
 				hasLost={hasLost ? word: false}
 				onReset={chooseNewWord}
 			/>
+			<Board
+				enabled={enabled}
+				size={size}
+				gameState={gameState}
+				onInput={onInput}
+				onEnter={onEnter}
+				onBackspace={onBackspace}
+			/>
+			{isMobile && (
+				<Keyboard
+					width={size * word.length + 50}
+					letterState={letterState}
+					onInput={onInput}
+					onEnter={onEnter}
+					onBackspace={onBackspace}
+				/>
+			)}
 		</Container>
 	)
 }

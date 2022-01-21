@@ -9,15 +9,10 @@ const Container = styled(Flex).attrs(() => ({
 	align: "center"
 }))`
 	width: ${({ width }) => width}px;
-	padding: 15px;
-	border-radius: 10px;
-	box-shadow: inset 0px 3px 11px rgba(0,0,0,0.3);
 `;
 
 const Status = styled(CenteredFlex)`
 	height: 40px;
-	padding: 0px 10px;
-	color: gray;
 	& > strong {
 		text-transform: uppercase;
 	}
@@ -25,10 +20,10 @@ const Status = styled(CenteredFlex)`
 
 const ResetButton = styled(CenteredFlex)`
 	height: 40px;
-	padding: 10px;
-	border-radius: 5px;
-	color: gray;
-	box-shadow: 0px 3px 11px rgba(0,0,0,0.3);
+	padding: 4px 8px;
+	border-radius: 6px;
+	background-color: #eee;
+	border: 1px solid #ddd;
 	cursor: pointer;
 `;
 
