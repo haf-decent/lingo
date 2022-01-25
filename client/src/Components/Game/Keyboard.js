@@ -6,9 +6,9 @@ const Container = styled(CenteredFlex).attrs(() => ({
 }))`
 	position: fixed;
 	bottom: 0px;
-	left: 0px;
-	right: 0px;
+	width: 100vw;
 	height: 160px;
+	max-width: 380px;
 
 	background-color: white;
 	box-shadow: 0px 3px 13px rgba(0,0,0,0.4);

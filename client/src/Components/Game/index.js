@@ -5,7 +5,6 @@ import { isMobile } from "react-device-detect";
 import { CenteredFlex } from "../Styles/Flex";
 import { Board } from "./Board";
 import { Controls } from "./Controls";
-// import { LetterSlot } from "./LetterSlot";
 import { Keyboard } from "./Keyboard";
 
 const Container = styled(CenteredFlex).attrs(() => ({
@@ -17,10 +16,6 @@ const Container = styled(CenteredFlex).attrs(() => ({
 		margin-bottom: 15px;
 	}
 `;
-
-// const Title = styled(Flex).attrs(() => ({
-// 	align: "center"
-// }))``;
 
 const createBlankState = (rows, cols) => (
 	Array.from({ length: rows }, () => (
@@ -112,16 +107,6 @@ export function Game({ word, chooseNewWord }) {
 
 	return (
 		<Container>
-			{/* <Title>
-				{"LINGO".split("").map((c, i) => (
-					<LetterSlot
-						key={i}
-						letter={c}
-						size={size}
-						invert={true}
-					/>
-				))}
-			</Title> */}
 			<Controls
 				width={size * word.length + 50}
 				enabled={enabled}
@@ -137,15 +122,13 @@ export function Game({ word, chooseNewWord }) {
 				onEnter={onEnter}
 				onBackspace={onBackspace}
 			/>
-			{isMobile && (
-				<Keyboard
-					width={size * word.length + 50}
-					letterState={letterState}
-					onInput={onInput}
-					onEnter={onEnter}
-					onBackspace={onBackspace}
-				/>
-			)}
+			<Keyboard
+				width={size * word.length + 50}
+				letterState={letterState}
+				onInput={onInput}
+				onEnter={onEnter}
+				onBackspace={onBackspace}
+			/>
 		</Container>
 	)
 }
