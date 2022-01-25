@@ -18,8 +18,8 @@ const Container = styled(CenteredFlex).attrs(() => ({
 `;
 
 const createBlankState = (rows, cols) => (
-	Array.from({ length: rows }, () => (
-		Array.from({ length: cols }, () => "_")
+	Array.from({ length: rows }, (_, r) => (
+		Array.from({ length: cols }, (_, c) => ({ letter: "_", status: r === 0 && c === 0 ? "selected": null }))
 	))
 );
 
@@ -49,7 +49,7 @@ export function Game({ word, chooseNewWord }) {
 		return "unused";
 	}, [ word ]);
 
-	const hasWon = state.rows.slice(0, state.move[0]).some(letters => letters.join("") === word);
+	const hasWon = state.rows.slice(0, state.move[0]).some(entries => entries.reduce((string, { letter }) => string + letter, "") === word);
 	const hasLost = !hasWon && state.move[0] >= state.rows.length;
 	const enabled = !!word && !hasWon && !hasLost;
 
@@ -62,7 +62,11 @@ export function Game({ word, chooseNewWord }) {
 		const [ letterCol, moveCol ] = col === rows[ row ].length
 			? [ col - 1, col ]
 			: [ col, col + 1 ];
-		rows[ row ][ letterCol ] = letter;
+		rows[ row ][ letterCol ].letter = letter;
+		if (moveCol < rows[ row ].length) {
+			rows[ row ][ letterCol ].status = null;
+			rows[ row ][ moveCol ].status = "selected";
+		}
 		return {
 			move: [ row, moveCol ],
 			rows
@@ -73,37 +77,36 @@ export function Game({ word, chooseNewWord }) {
 		const { move: [ row, col ], rows } = s;
 		if (col < rows[ row ].length) return s;
 		return {
-			...s,
+			rows: rows.map((stateRow, r) => (
+				stateRow.map(({ letter, status }, c) => {
+					if (r < row + 1) status = checkStatus(letter, c);
+					else if (r === row + 1 && c === 0) status = "selected";
+					return { letter, status };
+				})
+			)),
 			move: [ row + 1, 0 ]
 		}
-	}), []);
+	}), [ checkStatus ]);
 
 	const onBackspace = useCallback(() => setState(({ move: [ row, col ], rows }) => {
 		const nCol = Math.max(col - 1, 0);
-		rows[ row ][ nCol ] = "_";
+		rows[ row ][ nCol ].letter = "_";
+		if (nCol !== col) {
+			rows[ row ][ nCol ].status = "selected";
+			rows[ row ][ col ].status = null;
+		}
 		return {
 			move: [ row, nCol ],
 			rows
 		}
 	}), []);
 
-	const gameState = useMemo(() => state.rows.map((row, r) => (
-		row.map((char, c) => ({
-			letter: char,
-			status: r < state.move[0]
-				? checkStatus(char, c)
-				: enabled && r === state.move[0] && (c === state.move[1] || (state.move[1] === row.length && c === state.move[1] - 1))
-					? "selected"
-					: null
-		})
-	))), [ state, checkStatus, enabled ]);
-
 	const letterState = useMemo(() => (
 		state.rows.reduce((obj, row, r) => {
-			if (r < state.move[0]) row.forEach((char, c) => obj[ char ] = checkStatus(char, c));
-			return obj
+			if (r < state.move[0]) row.forEach(({ letter, status }) => obj[ letter ] = status);
+			return obj;
 		}, {})
-	), [ state, checkStatus ])
+	), [ state ]);
 
 	return (
 		<Container>
@@ -117,13 +120,12 @@ export function Game({ word, chooseNewWord }) {
 			<Board
 				enabled={enabled}
 				size={size}
-				gameState={gameState}
+				gameState={state.rows}
 				onInput={onInput}
 				onEnter={onEnter}
 				onBackspace={onBackspace}
 			/>
 			<Keyboard
-				width={size * word.length + 50}
 				letterState={letterState}
 				onInput={onInput}
 				onEnter={onEnter}

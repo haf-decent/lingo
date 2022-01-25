@@ -52,7 +52,7 @@ export function Board({ enabled, gameState, onInput, onBackspace, onEnter, size 
 						<LetterSlot
 							key={r}
 							letter={letter}
-							status={status}
+							status={!enabled && status === "selected" ? null: status}
 							size={size}
 						/>
 					))}
