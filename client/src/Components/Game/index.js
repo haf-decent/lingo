@@ -93,7 +93,7 @@ export function Game({ word, chooseNewWord }) {
 		rows[ row ][ nCol ].letter = "_";
 		if (nCol !== col) {
 			rows[ row ][ nCol ].status = "selected";
-			rows[ row ][ col ].status = null;
+			rows[ row ][ col ] && (rows[ row ][ col ].status = null);
 		}
 		return {
 			move: [ row, nCol ],
