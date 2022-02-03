@@ -13,6 +13,9 @@ const Container = styled(Flex).attrs(() => ({
 
 const Status = styled(CenteredFlex)`
 	height: 40px;
+	@media (prefers-color-scheme: dark) {
+		font-weight: 700;
+	}
 	& > strong {
 		text-transform: uppercase;
 	}
@@ -23,6 +26,10 @@ const ResetButton = styled(CenteredFlex)`
 	padding: 4px 8px;
 	border-radius: 6px;
 	background-color: #eee;
+	@media (prefers-color-scheme: dark) {
+		font-weight: 700;
+		background-color: #363636;
+	}
 	border: 1px solid #ddd;
 	cursor: pointer;
 `;

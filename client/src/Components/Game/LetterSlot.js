@@ -26,6 +26,24 @@ const Container = styled(CenteredFlex)`
 				return `border: 1px solid #ddd;`;
 		}
 	}}
+
+	@media (prefers-color-scheme: dark) {
+		font-weight: 700;
+		${({ status = null }) => {
+			switch(status) {
+				case "selected":
+					return `border: 8px solid white;`;
+				case "unused":
+					return `border: 8px solid #aaa;`;
+				case "misplaced":
+					return `border: 8px solid yellow;`;
+				case "correct":
+					return `border: 8px solid #00ff00;`;
+				default:
+					return `border: 1px solid #ddd;`;
+			}
+		}}
+	}
 `;
 
 export function LetterSlot({ letter = "_", status, size = 60, invert = false }) {

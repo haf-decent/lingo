@@ -12,6 +12,10 @@ const Container = styled(CenteredFlex).attrs(() => ({
 
 	background-color: white;
 	box-shadow: 0px 3px 13px rgba(0,0,0,0.4);
+	@media (prefers-color-scheme: dark) {
+		background-color: #363636;
+		box-shadow: 0px 5px 20px rgba(0,0,0,0.8);
+	}
 
 	border-top-left-radius: 20px;
 	border-top-right-radius: 20px;
@@ -44,6 +48,24 @@ const Key = styled(CenteredFlex)`
 				return `#eee`;
 		}
 	}};
+
+	@media (prefers-color-scheme: dark) {
+		text-shadow: 0px 0px 4px black;
+		font-weight: 700;
+		background-color: ${({ status = null, special = false }) => {
+			if (special) return `rgba(0,0,0,0.8); color: white`;
+			switch(status) {
+				case "unused":
+					return `#bbb`;
+				case "misplaced":
+					return `yellow`;
+				case "correct":
+					return `#00ff00`;
+				default:
+					return `#333`;
+			}
+		}};
+	}
 `;
 
 const keyboardArr = [

@@ -12,6 +12,9 @@ const Container = styled(CenteredFlex).attrs(() => ({
 	padding: 10px;
 	border-radius: 10px;
 	box-shadow: inset 0px 3px 11px rgba(0,0,0,0.25);
+	@media (prefers-color-scheme: dark) {
+		box-shadow: inset 0px 5px 20px rgba(0,0,0,0.8);
+	}
 `;
 
 const RowContainer = styled(Flex).attrs(() => ({
