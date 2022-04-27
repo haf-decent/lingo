@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import styled from "styled-components";
 
 import { useTimer } from "../../Hooks/useTimer";
@@ -37,6 +38,11 @@ const ResetButton = styled(CenteredFlex)`
 export function Controls({ width = 370, enabled, hasWon, hasLost, onReset }) {
 	const [ elapsed, restart ] = useTimer(enabled);
 
+	const clickToReset = useCallback(() => {
+		onReset();
+		restart();
+	}, [ onReset, restart ]);
+
 	return (
 		<Container width={width}>
 			<Status>
@@ -49,10 +55,7 @@ export function Controls({ width = 370, enabled, hasWon, hasLost, onReset }) {
 							: "--:--"
 				}
 			</Status>
-			<ResetButton onClick={() => {
-				onReset();
-				restart();
-			}}>RESET</ResetButton>
+			<ResetButton onClick={clickToReset}>RESET</ResetButton>
 		</Container>
 	)
 }
