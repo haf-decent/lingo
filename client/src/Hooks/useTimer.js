@@ -33,6 +33,7 @@ export function useTimer(shouldCount) {
 		
 		const start = Date.now();
 		set(() => setTime(formatTime(Date.now() - start, 2)), 1000);
+		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
@@ -41,6 +42,7 @@ export function useTimer(shouldCount) {
 		restart();
 
 		return clear;
+		// eslint-disable-next-line
 	}, [ shouldCount, restart ]);
 
 	return [ time, restart ];
