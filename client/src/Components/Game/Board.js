@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 import styled from "styled-components";
+
+import { useEventListener } from "../../Hooks/useEventListener";
 
 import { CenteredFlex, Flex } from "../Styles/Flex";
 
@@ -29,23 +31,22 @@ const allowed = "abcdefghijklmnopqrstuvwxyz".split("");
 
 export function Board({ enabled, gameState, onInput, onBackspace, onEnter, size }) {
 
-	useEffect(() => {
-		if (!enabled) return;
-
-		const onKeyDown = ({ key }) => {
-			switch(key) {
-				case "Backspace":
-					return onBackspace();
-				case "Enter":
-					return onEnter();
-				default:
-					allowed.includes(key.toLowerCase()) && onInput(key.toLowerCase());
-			}
+	const onKeyDown = useCallback(({ key }) => {
+		key = key.toLowerCase();
+		switch(key) {
+			case "backspace":
+				return onBackspace();
+			case "enter":
+				return onEnter();
+			default:
+				if (allowed.includes(key)) onInput(key);
 		}
-		window.addEventListener("keydown", onKeyDown);
-
-		return () => window.removeEventListener("keydown", onKeyDown);
-	}, [ onInput, onBackspace, onEnter, enabled ]);
+	}, [ onInput, onBackspace, onEnter ]);
+	useEventListener({
+		event: "keydown",
+		callback: onKeyDown,
+		enabled
+	});
 	
 	return (
 		<Container>
